@@ -54,6 +54,9 @@ jobs:
         uses: ./.github/actions/setup-bun
 
       - name: Build ForgeCode executable
+        env:
+          OPENCODE_VERSION: ${{ inputs.version }}
+          OPENCODE_CHANNEL: ${{ inputs.prerelease && 'beta' || 'latest' }}
         run: bun run --cwd packages/cli build:forgecode --single
 
       - name: Stage release binary

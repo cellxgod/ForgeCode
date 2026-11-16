@@ -44,4 +44,4 @@ Open a GitHub issue with the operating system, Bun version, exact command, expec
 
 ## Release status
 
-No stable ForgeCode release is published yet. The repository has a manual release workflow for building Linux x64, macOS arm64, and Windows x64 binaries. Release publication is gated on successful builds and is not triggered automatically by commits.
+No stable ForgeCode release is published yet. The repository has a manual release workflow for building Linux x64, macOS arm64, and Windows x64 binaries. The workflow defaults to build-only; set its `publish` input to `true` only after reviewing successful platform builds. The default version is a prerelease, and release publication is never triggered automatically by commits.

@@ -19,19 +19,24 @@ ForgeCode is an independent open-source project and a community fork of [OpenCod
 
 ForgeCode is in its foundation stage. The current repository is a fork of the upstream codebase; ForgeCode-specific capabilities are being developed and validated incrementally. Roadmap items are goals, not claims that features are already implemented.
 
+## Quickstart
+
+See the [ForgeCode quickstart](docs/forgecode/quickstart.md) for source setup and current limitations. The first stable release is not available yet.
+
 ## Development
 
 The upstream codebase is a Bun-powered TypeScript monorepo. Start by reviewing the existing contribution and development instructions, then install the pinned toolchain and dependencies:
 
 ```bash
 bun install
-bun run dev
+bun run dev .
 ```
 
 Use the package-level scripts and CI workflows for targeted tests and type checks. Do not assume a full test suite has passed unless it has been run on the exact commit.
 
 ## Documentation
 
+- [Quickstart](docs/forgecode/quickstart.md)
 - [Architecture direction](docs/forgecode/architecture.md)
 - [API and provider compatibility](docs/forgecode/api-compatibility.md)
 - [Roadmap](docs/forgecode/roadmap.md)
@@ -40,7 +45,7 @@ Use the package-level scripts and CI workflows for targeted tests and type check
 
 ## Contributing
 
-Contributions should include tests for behavior changes, document provider-specific limitations, avoid leaking credentials, and preserve upstream license notices. Performance claims must include reproducible workloads and measurements.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Contributions should include tests for behavior changes, document provider-specific limitations, avoid leaking credentials, and preserve upstream license notices. Performance claims must include reproducible workloads and measurements.
 
 ## Upstream attribution
 

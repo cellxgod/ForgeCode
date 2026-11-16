@@ -6,7 +6,8 @@
   "license": "MIT",
   "bin": {
     "opencode": "./bin/opencode.cjs",
-    "opencode2": "./bin/opencode2.cjs"
+    "opencode2": "./bin/opencode2.cjs",
+    "forgecode": "./bin/opencode.cjs"
   },
   "files": [
     "bin"
@@ -56,7 +57,7 @@
     "@opencode/protocol": "workspace:*",
     "@tsconfig/bun": "catalog:",
     "@types/bun": "catalog:",
-    "@typescript/native": "catalog:",
+    "typescript": "catalog:",
     "@lydell/node-pty-darwin-arm64": "1.2.0-beta.12",
     "@lydell/node-pty-darwin-x64": "1.2.0-beta.12",
     "@lydell/node-pty-linux-arm64": "1.2.0-beta.12",
@@ -68,11 +69,11 @@
     "@ff-labs/fff-bin-linux-x64-gnu": "0.10.5",
     "@ff-labs/fff-bin-win32-arm64": "0.10.5",
     "@ff-labs/fff-bin-win32-x64": "0.10.5",
-    "@yuuang/ffi-rs-darwin-arm64": "1.3.2",
-    "@yuuang/ffi-rs-linux-arm64-gnu": "1.3.2",
-    "@yuuang/ffi-rs-linux-x64-gnu": "1.3.2",
-    "@yuuang/ffi-rs-win32-arm64-msvc": "1.3.2",
-    "@yuuang/ffi-rs-win32-x64-msvc": "1.3.2",
+    "@yuuyang/ffi-rs-darwin-arm64": "1.3.2",
+    "@yuuyang/ffi-rs-linux-arm64-gnu": "1.3.2",
+    "@yuuyang/ffi-rs-linux-x64-gnu": "1.3.2",
+    "@yuuyang/ffi-rs-win32-arm64-msvc": "1.3.2",
+    "@yuuyang/ffi-rs-win32-x64-msvc": "1.3.2",
     "@parcel/watcher-darwin-arm64": "2.5.1",
     "@parcel/watcher-linux-arm64-glibc": "2.5.1",
     "@parcel/watcher-linux-x64-glibc": "2.5.1",
@@ -81,10 +82,5 @@
     "solid-refresh": "0.6.3",
     "vite": "catalog:",
     "vite-plugin-solid": "catalog:"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/anomalyco/opencode.git",
-    "directory": "packages/cli"
   }
 }

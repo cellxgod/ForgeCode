@@ -92,11 +92,21 @@ test("storage.flush reports failures from pending writes", async () => {
     const [, update] = result.storage.store("kv", { initial: { count: 0 } })
     const write = update((draft) => {
       draft.count = 1
-    })
-    const flush = result.storage.flush()
+    }).then(
+      () => ({ status: "resolved" as const }),
+      (error: unknown) => ({ status: "rejected" as const, error }),
+    )
+    const flush = result.storage.flush().then(
+      () => ({ status: "resolved" as const }),
+      (error: unknown) => ({ status: "rejected" as const, error }),
+    )
 
-    await expect(write).rejects.toBeInstanceOf(Error)
-    await expect(flush).rejects.toBeInstanceOf(Error)
+    const [writeResult, flushResult] = await Promise.all([write, flush])
+    expect(writeResult.status).toBe("rejected")
+    expect(flushResult.status).toBe("rejected")
+    if (writeResult.status === "rejected" && flushResult.status === "rejected") {
+      expect(flushResult.error).toBe(writeResult.error)
+    }
   } finally {
     result.close()
     rmSync(dir, { recursive: true, force: true })

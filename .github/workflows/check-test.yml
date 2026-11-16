@@ -143,6 +143,62 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value $binaryDirectory
           & $binary --version
 
+      # Linux tests use the same pinned ripgrep asset as RipgrepBinary; the test harness blocks outbound HTTP.
+      - name: Install pinned ripgrep on Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          readarray -t pin < <(python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          source = Path("packages/core/src/ripgrep/binary.ts").read_text()
+          version = re.search(r'const VERSION = "([^"]+)"', source)
+          asset = re.search(
+              r'"x64-linux":\s*\{\s*platform: "([^"]+)",\s*extension: "([^"]+)",\s*sha256: "([a-f0-9]{64})"',
+              source,
+          )
+          if not version or not asset:
+              raise SystemExit("Could not read the pinned Linux ripgrep release from binary.ts")
+          print(version.group(1))
+          print(asset.group(1))
+          print(asset.group(2))
+          print(asset.group(3))
+          PY
+          )
+          version="${pin[0]}"
+          platform="${pin[1]}"
+          extension="${pin[2]}"
+          expected_hash="${pin[3]}"
+          if [[ "$extension" != "tar.gz" ]]; then
+            echo "Unexpected Linux ripgrep archive format: $extension" >&2
+            exit 1
+          fi
+
+          filename="ripgrep-$version-$platform.$extension"
+          archive="$RUNNER_TEMP/$filename"
+          url="https://github.com/BurntSushi/ripgrep/releases/download/$version/$filename"
+          curl --fail --location --retry 3 --retry-delay 1 --output "$archive" "$url"
+          actual_hash="$(sha256sum "$archive" | cut -d' ' -f1)"
+          if [[ "$actual_hash" != "$expected_hash" ]]; then
+            echo "ripgrep SHA-256 mismatch: expected $expected_hash, got $actual_hash" >&2
+            exit 1
+          fi
+
+          destination="$RUNNER_TEMP/ripgrep-$version"
+          mkdir -p "$destination"
+          tar -xzf "$archive" -C "$destination"
+          binary_directory="$destination/ripgrep-$version-$platform"
+          binary="$binary_directory/rg"
+          if [[ ! -f "$binary" ]]; then
+            echo "Pinned ripgrep archive did not contain $binary" >&2
+            exit 1
+          fi
+          chmod +x "$binary"
+          echo "$binary_directory" >> "$GITHUB_PATH"
+          "$binary" --version
+
       - name: Test Effect simplification rules
         if: runner.os == 'Linux'
         run: bun run test:effect-simplification-rules

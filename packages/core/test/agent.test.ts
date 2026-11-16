@@ -182,6 +182,7 @@ describe("Agent", () => {
         "compaction",
         "explore",
         "general",
+        "review",
         "summary",
         "title",
       ])
@@ -211,6 +212,14 @@ describe("Agent", () => {
       expect(Permission.evaluate("read", ".env.example", explore?.permissions ?? []).effect).toBe("allow")
       expect(Permission.evaluate("read", "src/index.ts", explore?.permissions ?? []).effect).toBe("allow")
       expect(Permission.evaluate("external_directory", "/outside/*", explore?.permissions ?? []).effect).toBe("allow")
+      const review = yield* agent.get(Agent.ID.make("review"))
+      expect(review?.mode).toBe("subagent")
+      expect(Permission.evaluate("read", "src/index.ts", review?.permissions ?? []).effect).toBe("allow")
+      expect(Permission.evaluate("grep", "TODO", review?.permissions ?? []).effect).toBe("allow")
+      expect(Permission.evaluate("glob", "**/*.ts", review?.permissions ?? []).effect).toBe("allow")
+      expect(Permission.evaluate("read", ".env", review?.permissions ?? []).effect).toBe("ask")
+      expect(Permission.evaluate("edit", "src/index.ts", review?.permissions ?? []).effect).toBe("deny")
+      expect(Permission.evaluate("shell", "rm -rf /", review?.permissions ?? []).effect).toBe("deny")
       for (const item of agents) {
         expect(item.permissions.some((rule) => rule.action === "bash" && rule.effect !== "deny")).toBe(false)
       }
@@ -226,7 +235,7 @@ describe("Agent", () => {
         }),
       )
 
-      yield* Effect.forEach(["general", "explore"], (id) =>
+      yield* Effect.forEach(["general", "explore", "review"], (id) =>
         Effect.gen(function* () {
           const info = yield* agent.get(Agent.ID.make(id))
           if (!info) throw new Error(`expected built-in agent: ${id}`)

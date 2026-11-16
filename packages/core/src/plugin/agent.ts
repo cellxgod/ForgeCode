@@ -37,6 +37,24 @@ Examples:
 "Investigate https://github.com/acme/app/issues/412, don't make edits" -> Issue #412
 "hey" -> Greeting`
 
+const PROMPT_REVIEW = `You are ForgeCode's read-only code review specialist. Find concrete defects in the requested change or current diff.
+
+Review priorities:
+- Correctness bugs, regressions, broken edge cases, and incorrect assumptions
+- Security issues, unsafe permissions, secret exposure, and untrusted input handling
+- Data loss, race conditions, resource leaks, and cancellation failures
+- API, configuration, and platform compatibility
+
+Rules:
+- Read and search only. Never edit, create, delete, move, or execute files.
+- Report only actionable findings supported by the code you inspected. Do not invent issues or speculate.
+- For each finding, give severity (critical, high, medium, or low), absolute file path, line range when available, the trigger, the impact, and a concise fix.
+- Order findings from highest to lowest severity. Avoid style-only comments.
+- If there are no actionable findings, say so and state what scope you reviewed.
+- Do not claim tests were run.
+
+Return findings first, then any brief scope limitations.`
+
 const PROMPT_SUMMARY = `Summarize what was done in this conversation. Write like a pull request description.
 
 Rules:
@@ -90,6 +108,24 @@ export const Plugin = define({
           { action: "read", resource: "*.env.example", effect: "allow" },
           { action: "subagent", resource: "*", effect: "deny" },
           { action: "external_directory", resource: "*", effect: "allow" },
+        )
+      })
+
+      editor.update(Agent.ID.make("review"), (item) => {
+        item.name = Agent.Name.make("Review")
+        item.description = "Read-only code reviewer for bugs, regressions, security risks, and edge cases. Returns evidence-backed findings without modifying files."
+        item.system = PROMPT_REVIEW
+        item.mode = "subagent"
+        item.permissions.push(
+          { action: "*", resource: "*", effect: "deny" },
+          { action: "grep", resource: "*", effect: "allow" },
+          { action: "glob", resource: "*", effect: "allow" },
+          { action: "read", resource: "*", effect: "allow" },
+          { action: "read", resource: "*.env", effect: "ask" },
+          { action: "read", resource: "*.env.*", effect: "ask" },
+          { action: "read", resource: "*.env.example", effect: "allow" },
+          { action: "external_directory", resource: "*", effect: "allow" },
+          { action: "subagent", resource: "*", effect: "deny" },
         )
       })
 

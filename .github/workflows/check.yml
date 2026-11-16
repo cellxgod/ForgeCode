@@ -2,9 +2,9 @@ name: check
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, forgecode/foundation]
   pull_request:
-    branches: [dev, beta]
+    branches: [dev, beta, forgecode/foundation]
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 

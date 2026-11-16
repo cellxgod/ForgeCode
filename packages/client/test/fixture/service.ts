@@ -109,8 +109,9 @@ if (controlled !== "hang") {
   process.on("SIGINT", () => void shutdown("SIGINT"))
 }
 
+const temporary = `${registration}.${process.pid}.tmp`
 await writeFile(
-  registration + ".tmp",
+  temporary,
   JSON.stringify({
     id,
     version,
@@ -120,7 +121,7 @@ await writeFile(
   }),
   { mode: 0o600 },
 )
-await rename(registration + ".tmp", registration)
+await rename(temporary, registration)
 
 async function shutdown(signal?: NodeJS.Signals) {
   if (signal !== undefined) await writeFile(registration + ".signal", signal)

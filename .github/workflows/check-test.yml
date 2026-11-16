@@ -105,6 +105,44 @@ jobs:
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
 
+      # The test harness blocks outbound HTTP. Install the same pinned ripgrep release used by
+      # RipgrepBinary so Windows tests exercise the real executable instead of trying to download it.
+      - name: Install pinned ripgrep
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = Get-Content 'packages/core/src/ripgrep/binary.ts' -Raw
+          $versionMatch = [regex]::Match($source, 'const VERSION = "([^"]+)"')
+          $assetMatch = [regex]::Match($source, '"x64-win32":\s*\{\s*platform: "([^"]+)",\s*extension: "([^"]+)",\s*sha256: "([a-f0-9]{64})"')
+          if (!$versionMatch.Success -or !$assetMatch.Success) {
+            throw 'Could not read the pinned Windows ripgrep release from binary.ts'
+          }
+          $version = $versionMatch.Groups[1].Value
+          $platform = $assetMatch.Groups[1].Value
+          $extension = $assetMatch.Groups[2].Value
+          $expectedHash = $assetMatch.Groups[3].Value
+          if ($extension -ne 'zip') { throw "Unexpected Windows ripgrep archive format: $extension" }
+
+          $filename = "ripgrep-$version-$platform.$extension"
+          $archive = Join-Path $env:RUNNER_TEMP $filename
+          $url = "https://github.com/BurntSushi/ripgrep/releases/download/$version/$filename"
+          Invoke-WebRequest -Uri $url -OutFile $archive
+          $actualHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "ripgrep SHA-256 mismatch: expected $expectedHash, got $actualHash"
+          }
+
+          $destination = Join-Path $env:RUNNER_TEMP "ripgrep-$version"
+          Expand-Archive -LiteralPath $archive -DestinationPath $destination -Force
+          $binaryDirectory = Join-Path $destination "ripgrep-$version-$platform"
+          $binary = Join-Path $binaryDirectory 'rg.exe'
+          if (!(Test-Path -LiteralPath $binary -PathType Leaf)) {
+            throw "Pinned ripgrep archive did not contain $binary"
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value $binaryDirectory
+          & $binary --version
+
       - name: Test Effect simplification rules
         if: runner.os == 'Linux'
         run: bun run test:effect-simplification-rules

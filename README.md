@@ -36,6 +36,8 @@ Use the package-level scripts and CI workflows for targeted tests and type check
 
 ## Documentation
 
+- [Read-only code review agent](docs/forgecode/review-agent.md)
+
 - [Quickstart](docs/forgecode/quickstart.md)
 - [Architecture direction](docs/forgecode/architecture.md)
 - [API and provider compatibility](docs/forgecode/api-compatibility.md)

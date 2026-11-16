@@ -41,3 +41,7 @@ Open a GitHub issue with the operating system, Bun version, exact command, expec
 ## Release status
 
 There is no stable ForgeCode release yet. Watch the [GitHub repository](https://github.com/cellxgod/ForgeCode) for tagged releases and verified installation instructions.
+
+## Read-only code review
+
+The core agent registry includes a `review` specialist for bug, regression, security, and edge-case analysis. It is restricted to searching and reading project files: it cannot edit files, run shell commands, invoke nested agents, or access external directories. Ask the primary agent to delegate a review to `review`; see the [review agent guide](review-agent.md) for its permission boundary and expected findings format.

@@ -105,11 +105,7 @@ jobs:
         shell: bash
         run: |
           tag="v${VERSION}"
-          notes="ForgeCode ${tag}
-
-This is an initial ForgeCode release built from the community fork of OpenCode. Review the repository README and license notices. Verify SHA256SUMS before running downloaded binaries.
-
-Supported assets in this release: Linux x64, macOS arm64, and Windows x64. Other platforms are not included yet."
+          notes="ForgeCode ${tag}: initial release from the community OpenCode fork. Review the README and MIT license notices. Verify SHA256SUMS before running binaries. Assets: Linux x64, macOS arm64, Windows x64."
           args=()
           if [[ "$PRERELEASE" == "true" ]]; then args+=(--prerelease); fi
           gh release create "$tag" release-assets/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "ForgeCode ${tag}" --notes "$notes" "${args[@]}"

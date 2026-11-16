@@ -220,6 +220,7 @@ describe("Agent", () => {
       expect(Permission.evaluate("read", ".env", review?.permissions ?? []).effect).toBe("ask")
       expect(Permission.evaluate("edit", "src/index.ts", review?.permissions ?? []).effect).toBe("deny")
       expect(Permission.evaluate("shell", "rm -rf /", review?.permissions ?? []).effect).toBe("deny")
+      expect(Permission.evaluate("external_directory", "/outside/*", review?.permissions ?? []).effect).toBe("deny")
       for (const item of agents) {
         expect(item.permissions.some((rule) => rule.action === "bash" && rule.effect !== "deny")).toBe(false)
       }

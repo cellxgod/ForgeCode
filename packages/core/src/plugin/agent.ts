@@ -124,7 +124,6 @@ export const Plugin = define({
           { action: "read", resource: "*.env", effect: "ask" },
           { action: "read", resource: "*.env.*", effect: "ask" },
           { action: "read", resource: "*.env.example", effect: "allow" },
-          { action: "external_directory", resource: "*", effect: "allow" },
           { action: "subagent", resource: "*", effect: "deny" },
         )
       })

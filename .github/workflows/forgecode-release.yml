@@ -13,6 +13,11 @@ on:
         required: true
         default: true
         type: boolean
+      publish:
+        description: "Actually create the GitHub release after all platform builds pass"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -66,6 +71,7 @@ jobs:
           retention-days: 3
 
   publish:
+    if: ${{ inputs.publish }}
     name: Publish GitHub release
     needs: build
     runs-on: ubuntu-24.04

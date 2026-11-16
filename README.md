@@ -1,114 +1,47 @@
-<p align="center">
-  <a href="https://opencode.ai">
-    <picture>
-      <source srcset=".github/assets/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
-      <source srcset=".github/assets/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src=".github/assets/logo-ornate-light.svg" alt="OpenCode logo">
-    </picture>
-  </a>
-</p>
-<p align="center">The open source AI coding agent.</p>
-<p align="center">
-  <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
-  <a href="https://www.npmjs.com/package/@opencode/cli"><img alt="npm" src="https://img.shields.io/npm/v/@opencode/cli?style=flat-square" /></a>
-  <a href="https://github.com/anomalyco/opencode/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/anomalyco/opencode/release.yml?style=flat-square&branch=dev" /></a>
-</p>
+# ForgeCode
 
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh.md">简体中文</a> |
-  <a href="README.zht.md">繁體中文</a> |
-  <a href="README.ko.md">한국어</a> |
-  <a href="README.de.md">Deutsch</a> |
-  <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a> |
-  <a href="README.it.md">Italiano</a> |
-  <a href="README.da.md">Dansk</a> |
-  <a href="README.ja.md">日本語</a> |
-  <a href="README.pl.md">Polski</a> |
-  <a href="README.ru.md">Русский</a> |
-  <a href="README.bs.md">Bosanski</a> |
-  <a href="README.ar.md">العربية</a> |
-  <a href="README.no.md">Norsk</a> |
-  <a href="README.br.md">Português (Brasil)</a> |
-  <a href="README.th.md">ไทย</a> |
-  <a href="README.tr.md">Türkçe</a> |
-  <a href="README.uk.md">Українська</a> |
-  <a href="README.bn.md">বাংলা</a> |
-  <a href="README.gr.md">Ελληνικά</a> |
-  <a href="README.vi.md">Tiếng Việt</a>
-</p>
+**A high-performance, extensible AI coding environment built for serious terminal-first development.**
 
-[![OpenCode Terminal UI](services/site/public/v1/docs/assets/lander/screenshot.png)](https://opencode.ai)
+ForgeCode is an independent open-source project and a community fork of [OpenCode](https://github.com/anomalyco/opencode). It aims to make large codebases easier to understand, change, test, and ship through a fast terminal experience, reliable agent orchestration, broad model connectivity, and security-first execution.
 
----
+> ForgeCode is not built by, endorsed by, or affiliated with the OpenCode team. It retains the upstream project's MIT license and attribution. See [LICENSE](./LICENSE) and [the upstream project](https://github.com/anomalyco/opencode).
 
-### Installation
+## Project principles
+
+- **Terminal first:** low latency, keyboard-driven workflows, readable output, and composable commands.
+- **Model freedom:** hosted and local models, provider-specific APIs, OpenAI-compatible endpoints, and user-defined endpoints.
+- **Useful autonomy:** agents plan, edit, run checks, inspect failures, and report evidence; consequential actions remain reviewable.
+- **Fast on real repositories:** incremental indexing, bounded context, parallel work with isolation, and measurable resource use.
+- **Secure by default:** explicit tool permissions, secret redaction, sandbox-aware execution, and auditable actions.
+- **Open and extensible:** documented plugin interfaces, stable configuration, and reproducible benchmarks.
+
+## Status
+
+ForgeCode is in its foundation stage. The current repository is a fork of the upstream codebase; ForgeCode-specific capabilities are being developed and validated incrementally. Roadmap items are goals, not claims that features are already implemented.
+
+## Development
+
+The upstream codebase is a Bun-powered TypeScript monorepo. Start by reviewing the existing contribution and development instructions, then install the pinned toolchain and dependencies:
 
 ```bash
-# YOLO
-curl -fsSL https://opencode.ai/v2/install | bash
-
-# Package managers
-npm i -g @opencode/cli@latest      # or bun/pnpm/yarn
-brew install anomalyco/tap/opencode-v2 # macOS and Linux (recommended, always up to date)
-brew install opencode              # macOS and Linux (official brew formula, updated less)
-sudo pacman -S opencode            # Arch Linux (Stable)
-paru -S opencode-beta              # Arch Linux (Latest from AUR)
-mise use -g opencode               # Any OS
-nix run github:anomalyco/opencode  # Nix
+bun install
+bun run dev
 ```
 
-> [!TIP]
-> Remove versions older than 0.1.x before installing.
+Use the package-level scripts and CI workflows for targeted tests and type checks. Do not assume a full test suite has passed unless it has been run on the exact commit.
 
-### Desktop App (BETA)
+## Documentation
 
-OpenCode is also available as a desktop application. Download it from [opencode.ai/download](https://opencode.ai/download).
+- [Architecture direction](docs/forgecode/architecture.md)
+- [API and provider compatibility](docs/forgecode/api-compatibility.md)
+- [Roadmap](docs/forgecode/roadmap.md)
+- [Benchmark policy](docs/forgecode/benchmarks.md)
+- [Security model](docs/forgecode/security.md)
 
-| Platform              | Download                           |
-| --------------------- | ---------------------------------- |
-| macOS (Apple Silicon) | `opencode-desktop-mac-arm64.dmg`   |
-| macOS (Intel)         | `opencode-desktop-mac-x64.dmg`     |
-| Windows               | `opencode-desktop-win-x64.exe`     |
-| Linux                 | `.deb`, `.rpm`, or `.AppImage`     |
+## Contributing
 
-```bash
-# macOS (Homebrew)
-brew install --cask opencode-desktop
-```
+Contributions should include tests for behavior changes, document provider-specific limitations, avoid leaking credentials, and preserve upstream license notices. Performance claims must include reproducible workloads and measurements.
 
-#### Installation Directory
+## Upstream attribution
 
-The install script installs OpenCode to `$HOME/.opencode/bin`.
-
-### Agents
-
-OpenCode includes two built-in agents you can switch between with the `Tab` key.
-
-- **build** - Default, full-access agent for development work
-- **plan** - Read-only agent for analysis and code exploration
-  - Denies file edits by default
-  - Asks permission before running bash commands
-  - Ideal for exploring unfamiliar codebases or planning changes
-
-Also included is a **general** subagent for complex searches and multistep tasks.
-This is used internally and can be invoked using `@general` in messages.
-
-Learn more about [agents](https://opencode.ai/docs/agents).
-
-### Documentation
-
-For more info on how to configure OpenCode, [**head over to our docs**](https://opencode.ai/docs).
-
-### Contributing
-
-If you're interested in contributing to OpenCode, please read our [contributing docs](./CONTRIBUTING.md) before submitting a pull request.
-
-### Building on OpenCode
-
-If you are working on a project that's related to OpenCode and is using "opencode" as part of its name, for example "opencode-dashboard" or "opencode-mobile", please add a note to your README to clarify that it is not built by the OpenCode team and is not affiliated with us in any way.
-
----
-
-**Join our community** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)
+ForgeCode builds on the open-source work in [anomalyco/opencode](https://github.com/anomalyco/opencode). Copyright notices and the MIT license are retained. This project will clearly identify its changes and maintain its own release and support policy.

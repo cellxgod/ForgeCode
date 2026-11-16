@@ -44,6 +44,7 @@ import {
   useTuiPaths,
   useTuiStartup,
   useTuiTerminalEnvironment,
+  useTuiLifecycle,
   type TuiApp,
 } from "./context/runtime"
 import { DialogProvider, useDialog } from "./ui/dialog"
@@ -357,6 +358,7 @@ export const run = Effect.fn("Tui.run")(function* (input: TuiInput) {
                               },
                             }}
                           >
+                            <StorageFinalizer />
                             <TuiTerminalEnvironmentProvider
                               value={{
                                 platform: process.platform,
@@ -488,6 +490,13 @@ export const run = Effect.fn("Tui.run")(function* (input: TuiInput) {
     if (text) process.stdout.write(text + "\n")
   })
 })
+
+function StorageFinalizer() {
+  const storage = useStorage()
+  const lifecycle = useTuiLifecycle()
+  lifecycle.add(() => storage.flush())
+  return null
+}
 
 function App() {
   const app = useTuiApp()

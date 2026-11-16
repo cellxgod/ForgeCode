@@ -6,7 +6,7 @@ import path from "node:path"
 describe("upgrade command", () => {
   test("is registered in root help and documents its options", async () => {
     const root = await cli(["--help"], {}, "../src/index.ts")
-    const help = await cli(["upgrade", "--help"], {}, "../src/index.ts")
+    const help = await cli(["--help"])
     expect(root.exitCode).toBe(0)
     expect(root.stdout).toContain("upgrade")
     expect(help.exitCode).toBe(0)

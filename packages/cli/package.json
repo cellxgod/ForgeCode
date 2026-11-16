@@ -9,7 +9,9 @@
     "opencode2": "./bin/opencode2.cjs",
     "forgecode": "./bin/opencode.cjs"
   },
-  "files": ["bin"],
+  "files": [
+    "bin"
+  ],
   "exports": {
     "./vite-host": "./dev/host.js",
     "./server-process": "./src/server-process.ts"
@@ -22,7 +24,8 @@
     "dev": "bun run src/index.ts",
     "test": "bun test --timeout 30000 --only-failures",
     "typecheck": "bun check --no-script -b",
-    "typecheck:tsc": "tsc -b"
+    "typecheck:tsc": "tsc -b",
+    "build:forgecode": "bun run script/build-forgecode.ts"
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "1.6.0",
@@ -86,4 +89,4 @@
     "url": "git+https://github.com/anomalyco/opencode.git",
     "directory": "packages/cli"
   }
-}
+}\n

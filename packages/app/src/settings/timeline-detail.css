@@ -261,6 +261,7 @@
 
     /* Labels also activate :hover on their associated button. Keep that feedback local to the icon. */
     &:has(> label:hover) [data-action="timeline-detail-visibility"][data-variant="neutral"] {
+      background-color: transparent;
       background-image: none;
     }
   }

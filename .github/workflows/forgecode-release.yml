@@ -59,6 +59,13 @@ jobs:
           OPENCODE_CHANNEL: ${{ inputs.prerelease && 'beta' || 'latest' }}
         run: bun run --cwd packages/cli build:forgecode --single
 
+      - name: Smoke-test ForgeCode executable
+        shell: bash
+        run: |
+          binary="packages/cli/dist/${{ matrix.output }}/bin/${{ matrix.binary }}"
+          test -s "$binary"
+          "$binary" --version
+
       - name: Stage release binary
         shell: bash
         run: |
